@@ -13,16 +13,19 @@ public class ServiceNowAssignIncident extends BaseClassServiceNow {
 	public void assignIncident() throws InterruptedException {
 		
 	//  Enter incident in Filter Navigator and press Enter
-		driver.findElement(By.xpath("//input[@id='filter']")).sendKeys("incident");
-		driver.findElement(By.xpath("(//div[@class='sn-widget-list-title' and text()='All'])[2]")).click();
+		driver.findElement(By.xpath("//input[@id='filter']")).sendKeys("incident", Keys.ENTER);
 
 	//  Click on open and Search for the existing incident and click on the incident
-		driver.findElement(By.xpath("(//div[contains(text(),'Open') and @class='sn-widget-list-title'])[1]")).click();
+		driver.findElement(By.xpath("(//div[@class='sn-widget-list-title' and text()='Open'])[1]")).click();
 		
 		WebElement frame2 = driver.findElement(By.xpath("//iframe[@id='gsft_main']"));
 		driver.switchTo().frame(frame2);
 		Thread.sleep(2000);
-		driver.findElement(By.xpath("(//a[@class='linked formlink'])[2]")).click();
+		
+		WebElement searchbox = driver.findElement(By.xpath("//span[@class='input-group-addon input-group-select']/following-sibling::input"));
+		searchbox.sendKeys("incidentnumber");
+		searchbox.sendKeys(Keys.ENTER);
+		driver.findElement(By.xpath("//a[@class='linked formlink']")).click();
 
 	//  Assign the incident to Software group
 		driver.findElement(By.id("lookup.incident.assignment_group")).click();
@@ -44,10 +47,10 @@ public class ServiceNowAssignIncident extends BaseClassServiceNow {
 		driver.switchTo().frame(frame3);
 		
 		driver.findElement(By.id("activity-stream-textarea")).sendKeys("Updating the Assignment group");
-		driver.findElement(By.id("sysverb_update")).click();
+		driver.findElement(By.xpath("(//button[text()='Update'])[1]")).click();
 
 	//  Verify the Assignment group and Assigned for the incident
 		String assigngroup = driver.findElement(By.xpath("(//a[@class='linked'])[4]")).getText();
-		System.out.println("The Assignment group is " + assigngroup);
+		System.out.println("Assignment group: " + assigngroup);
 	}
 }

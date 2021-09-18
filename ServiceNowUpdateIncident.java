@@ -1,7 +1,6 @@
 package week5.day1;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.By;
 import org.testng.annotations.Test;
 
@@ -11,10 +10,7 @@ public class ServiceNowUpdateIncident extends BaseClassServiceNow {
 	public void updateIncident() throws InterruptedException {
 		
 	//  Enter incident in Filter Navigator and press Enter
-		WebElement filternav = driver.findElement(By.xpath("//input[@id='filter']"));
-		filternav.sendKeys("Incident");
-		filternav.sendKeys(Keys.ENTER);
-		
+		driver.findElement(By.xpath("//input[@id='filter']")).sendKeys("incident", Keys.ENTER);
 		driver.findElement(By.xpath("(//div[@class='sn-widget-list-title' and text()='All'])[2]")).click();
 
 	//  Search for the existing incident and click on the incident
@@ -22,37 +18,30 @@ public class ServiceNowUpdateIncident extends BaseClassServiceNow {
 		driver.switchTo().frame(frame2);
 		Thread.sleep(2000);
 		
-		WebElement searchbox = driver.findElement(By.xpath("//span[@class='input-group-addon input-group-select']/following-sibling::input"));
-		searchbox.sendKeys("INC0000020");
-		searchbox.sendKeys(Keys.ENTER);
-		
-		driver.findElement(By.xpath("//a[@class='linked formlink']")).click();
+		driver.findElement(By.xpath("//label[text()='Search']//following-sibling::input")).sendKeys("INC0010011", Keys.ENTER);
+		Thread.sleep(2000);
+		//driver.findElement(By.xpath("//a[text()='INC0010011']")).click();
 
 	//  Update the incidents with Urgency as High and State as In Progress
-		WebElement urgencydrop1 = driver.findElement(By.xpath("//select[@id='incident.urgency']"));
-		Select drpdwn1 = new Select(urgencydrop1);
-		drpdwn1.selectByVisibleText("1 - High");
-		
-		WebElement statedrop = driver.findElement(By.id("incident.state"));
-		Select drpdwn2 = new Select(statedrop);
-		drpdwn2.selectByIndex(1);
-		
-		driver.findElement(By.id("sysverb_update")).click();
+		driver.findElement(By.xpath("(//select[@id='incident.urgency']//option)[1]")).click();
+		driver.findElement(By.xpath("(//select[@id='incident.state']//option)[2]")).click();
+		Thread.sleep(2000);
+		driver.findElement(By.xpath("(//button[text()='Update'])[1]")).click();
 
 	//  Verify the priority
-		String prioritytext = driver.findElement(By.xpath("(//table)[2]//tbody//td[7]")).getText();
-			if (prioritytext.equalsIgnoreCase("3 - Moderate")) {
-				System.out.println("Priority is verified");
+		String priority = driver.findElement(By.xpath("(//table/tbody/tr[1]/td[text()])[2]")).getText();
+			if (priority.contains("High")) {
+				System.out.println("Priority is set as High");
 			} else {
-				System.out.println("Priority is not verified");
+				System.out.println("Priority is not High");
 			}
 		
-	//  Verify the state
-		String statetext = driver.findElement(By.xpath("(//table)[2]//tbody//td[8]")).getText();
-			if (statetext.equalsIgnoreCase("In Progress")) {
-				System.out.println("State is verified");
+	//  Verify the State	
+		String str = driver.findElement(By.xpath("(//table/tbody/tr[1]/td[text()])[3]")).getText();
+			if (str.contains("Progress")) {
+				System.out.println("State is in progress");
 			} else {
-				System.out.println("State is not verified");
-			}
+				System.out.println("Not started");
+			}	
 	}
 }

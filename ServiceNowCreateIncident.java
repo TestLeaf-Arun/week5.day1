@@ -13,16 +13,13 @@ public class ServiceNowCreateIncident extends BaseClassServiceNow {
 	public void createIncident() throws InterruptedException {
 		
 	//  Enter incident in Filter Navigator and press Enter
-		driver.findElement(By.xpath("//input[@id='filter']")).sendKeys("incident");
-		driver.findElement(By.xpath("(//div[@class='sn-widget-list-title' and text()='All'])[2]")).click();
+		driver.findElement(By.xpath("//input[@id='filter']")).sendKeys("incident", Keys.ENTER);
 
-	//  Click New button
+	//  Click Create New button
+        driver.findElement(By.xpath("//div[@class='sn-widget-list-title' and text()='Create New']")).click();
 		WebElement frame2 = driver.findElement(By.xpath("//iframe[@id='gsft_main']"));
 		driver.switchTo().frame(frame2);
-		driver.findElement(By.xpath("//button[@id='sysverb_new']")).click();
-
-	//  Select a value for Caller and Enter value for short_description
-		driver.findElement(By.id("lookup.incident.caller_id")).click();
+        driver.findElement(By.xpath("(//span[@class='icon icon-search'])[1]")).click();
 		
 		Set<String> windowHandlesSet = driver.getWindowHandles();
 		List<String> windowHandlesList = new ArrayList<String>(windowHandlesSet);
@@ -40,7 +37,7 @@ public class ServiceNowCreateIncident extends BaseClassServiceNow {
 		System.out.println("Incident number: " + incidentnumber);
 
 	//  Click on Submit button
-		driver.findElement(By.id("sysverb_insert")).click();
+        driver.findElement(By.xpath("(//button[text()='Submit'])[2]")).click();
 
 	//  Search the same incident number in the next search screen
 		WebElement searchtext = driver.findElement(By.xpath("(//input[@class='form-control'])[1]"));
